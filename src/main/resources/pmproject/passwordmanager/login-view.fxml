@@ -15,6 +15,6 @@
     <Label fx:id="welcomeText"/>
     <TextField fx:id="usernameField" promptText="Username"/>
     <TextField fx:id="passwordField" promptText="Passoword"/>
-    <Button text="loginButton" onAction="#onLoginButtonClick"/>
-    <Button text="createAccountButton" onAction="#onCreateAccountButtonClick"/>
+    <Button text="login" onAction="#onLoginButtonClick"/>
+    <Button text="create account" onAction="#onCreateAccountButtonClick"/>
 </VBox>

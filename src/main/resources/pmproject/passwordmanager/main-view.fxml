@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane fx:id="mainPane"
+            xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            prefHeight="650" minHeight="450"
+            prefWidth="750" minWidth="550"
+            fx:controller="pmproject.passwordmanager.MainPageController">
+    <top>
+        <MenuBar fx:id="menuBar">
+            <Menu text="File">
+                <MenuItem text="exit"/>
+            </Menu>
+            <Menu text="Settings">
+                <MenuItem text="Preferences"/>
+            </Menu>
+        </MenuBar>
+    </top>
+
+    <left>
+        <HBox fx:id="leftHBox" alignment="TOP_LEFT" spacing="0">
+            <ScrollPane fx:id="logsScrollPane"
+                        visible="false"
+                        HBox.hgrow="NEVER"
+                        prefWidth="150" maxWidth="150" minWidth="150"
+                        fitToWidth="true" fitToHeight="true"
+                        hbarPolicy="NEVER" vbarPolicy="AS_NEEDED">
+                <VBox fx:id="logsVBox" fillWidth="true" spacing="0">
+                    <!-- Search Bar for Logs -->
+                    <TextField fx:id="logsSearchBar" promptText="Search logs"/>
+                    <!-- Logs Display Area -->
+                    <TextArea fx:id="logsTextArea" wrapText="true" VBox.vgrow="ALWAYS">
+                        <Label text="Logs will be displayed here"/>
+                    </TextArea>
+                </VBox>
+            </ScrollPane>
+            <Button fx:id="logsButton" text="logs"
+                    onAction="#onLogsClicked"
+                    HBox.hgrow="NEVER"/>
+        </HBox>
+    </left>
+
+    <!-- Right: Accounts ScrollPane (Initially hidden) -->
+    <right>
+        <ScrollPane fx:id="accountsScrollPane"
+                    visible="false"
+                    prefWidth="350" maxWidth="350" minWidth="350"
+                    fitToWidth="true">
+            <!-- This can be populated with account data dynamically -->
+            <VBox fx:id="accountsVBox"
+                  alignment="CENTER"
+                  spacing="10"
+                  fillWidth="true">
+
+                <!-- Search Bar for Accounts -->
+                <TextField fx:id="accountSearchBar" promptText="Search a resource"/>
+                <!-- Placeholder for account data -->
+                <Label text="Accounts will be displayed here"/>
+            </VBox>
+        </ScrollPane>
+    </right>
+
+    <bottom>
+
+        <HBox fx:id="bottomHBox"
+              spacing="0"
+              prefHeight="36"
+              maxWidth="Infinity"
+              alignment="CENTER">
+              <Button fx:id="addAccountButton"
+                      text="Add account"
+                      onAction="#onAddAccountClicked"
+                      prefHeight="35"
+                      maxWidth="1080"
+                      HBox.hgrow="ALWAYS"/>
+              <Button fx:id="generatePasswordButton"
+                      text="Generate password"
+                      onAction="#onGeneratePasswordClicked"
+                      prefHeight="35"
+                      maxWidth="1080"
+                      HBox.hgrow="ALWAYS"/>
+             <Button fx:id="showAccountsButton"
+                     text="Show accounts"
+                     onAction="#onShowAccountsClicked"
+                     prefHeight="35"
+                     maxWidth="1080"
+                     HBox.hgrow="ALWAYS"/>
+            </HBox>
+    </bottom>
+
+    <padding>
+        <Insets top="0" left="0" right="0" bottom="0"/>
+    </padding>
+
+</BorderPane>
