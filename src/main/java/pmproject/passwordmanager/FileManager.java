@@ -7,7 +7,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ArrayList;
 
-public class FileManager<T extends List> {
+public class FileManager {
     private String FILE_PATH_LOGIN = "Login.txt";
     private String FILE_PATH_ACCOUNTS = "Accounts.txt";
     private String FILE_PATH_HISTORY = "History.bin";
@@ -27,17 +27,17 @@ public class FileManager<T extends List> {
             }
         }
     }
-    public List<T> readAccount () {
-        List<T> accounts = new ArrayList<>();
+    public List<Account> readAccount () {
+        List<Account> accounts = new ArrayList<>();
         try(BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH_ACCOUNTS))){
-//            String line;
-//            while((line = reader.readLine()) != null){
-//                String resource = line.substring(line.indexOf(':')+2);
-//                String login = reader.readLine().substring(7);
-//                String password = reader.readLine().substring(10);
-//                LocalDate date = LocalDate.parse(reader.readLine().substring(6));
-//                accounts.add(new T(resource,login,password,date));
-//            }
+            String line;
+            while((line = reader.readLine()) != null){
+                String resource = line.substring(line.indexOf(':')+2);
+                String login = reader.readLine().substring(7);
+                String password = reader.readLine().substring(10);
+                LocalDate date = LocalDate.parse(reader.readLine().substring(6));
+                accounts.add(new Account(resource,login,password,date));
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
