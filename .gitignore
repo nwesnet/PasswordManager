@@ -36,3 +36,8 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+### Storage files ###
+Login.txt
+Accounts.txt
+History.bin

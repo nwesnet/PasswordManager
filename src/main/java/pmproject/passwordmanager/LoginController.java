@@ -29,25 +29,31 @@ public class LoginController {
     protected void onLoginButtonClick(ActionEvent event){
         System.out.printf("Username: %s\nPassword: %s",usernameField.getText(),passwordField.getText());
         //Close the current login window and open the main window
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("main-view.fxml"));
-            Scene mainScene = new Scene(fxmlLoader.load(),650,550);
+        FileManager fm = new FileManager();
+        if (true) {
+            fm.successfulLogin();
+            try {
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("main-view.fxml"));
+                Scene mainScene = new Scene(fxmlLoader.load(), 650, 550);
 
-            //Get the current stage (login window) and close it
-            Stage loginStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            loginStage.close();
+                //Get the current stage (login window) and close it
+                Stage loginStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                loginStage.close();
 
-            //Open the main window in a new stage
-            Stage mainStage = new Stage();
-            mainStage.setTitle("Password manager");
-            mainStage.setScene(mainScene);
-            mainStage.setMinHeight(550);
-            mainStage.setMinWidth(650);
-            mainStage.show();
+                //Open the main window in a new stage
+                Stage mainStage = new Stage();
+                mainStage.setTitle("Password manager");
+                mainStage.setScene(mainScene);
+                mainStage.setMinHeight(550);
+                mainStage.setMinWidth(650);
+                mainStage.show();
 
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-        catch (IOException e){
-            e.printStackTrace();
+        else {
+            fm.failedLogin();
         }
     }
     @FXML
