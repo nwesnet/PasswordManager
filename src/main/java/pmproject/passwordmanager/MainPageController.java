@@ -1,6 +1,8 @@
 package pmproject.passwordmanager;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.ScrollPane;
@@ -8,6 +10,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.animation.TranslateTransition;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class MainPageController {
@@ -44,6 +47,22 @@ public class MainPageController {
     protected void onAddAccountClicked(){
         // Logic for adding an account
         System.out.println("Add Account clicked");
+        try {
+            // Load the addaccount-view.fxml
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("addaccount-view.fxml"));
+            Scene scene = new Scene(fxmlLoader.load());
+
+            Stage stage = new Stage();
+            stage.setTitle("Add new account");
+
+            stage.setScene(scene);
+            stage.setMinHeight(220);
+            stage.setMinWidth(350);
+            stage.setResizable(false);
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     @FXML
     protected void onGeneratePasswordClicked() {
