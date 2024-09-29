@@ -68,6 +68,19 @@ public class MainPageController {
     protected void onGeneratePasswordClicked() {
         // Logic for generating a password
         System.out.println("Generate Password clicked");
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("genpsswd-view.fxml"));
+            Scene scene = new Scene(fxmlLoader.load());
+
+            Stage stage = new Stage();
+            stage.setTitle("Generate password");
+            stage.setScene(scene);
+            stage.setMinHeight(250);
+            stage.setMinWidth(450);
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
