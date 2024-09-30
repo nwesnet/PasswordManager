@@ -51,7 +51,7 @@
     <right>
         <ScrollPane fx:id="accountsScrollPane"
                     visible="false"
-                    prefWidth="350" maxWidth="350" minWidth="350"
+                    prefWidth="460" maxWidth="550" minWidth="350"
                     fitToWidth="true">
             <!-- This can be populated with account data dynamically -->
             <VBox fx:id="accountsVBox"
@@ -61,8 +61,7 @@
 
                 <!-- Search Bar for Accounts -->
                 <TextField fx:id="accountSearchBar" promptText="Search a resource"/>
-                <!-- Placeholder for account data -->
-                <Label text="Accounts will be displayed here"/>
+                <!-- Account data will be dynamically populated here -->
             </VBox>
         </ScrollPane>
     </right>
