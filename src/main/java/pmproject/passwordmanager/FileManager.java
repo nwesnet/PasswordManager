@@ -51,6 +51,18 @@ public class FileManager {
             e.printStackTrace();
         }
     }
+    private void writeAccountsToFile(List<Account> accounts) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH_ACCOUNTS, false))) {
+            for (Account account : accounts) {
+                writer.write("Resource: " + account.getResource() + "\n");
+                writer.write("Login: " + account.getLogin() + "\n");
+                writer.write("Password: " + account.getPassword() + "\n");
+                writer.write("Time: " + account.getDate().toString() + "\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     public StringBuilder readHistory () {
         StringBuilder history = new StringBuilder();
         try (DataInputStream dis = new DataInputStream(new FileInputStream(FILE_PATH_HISTORY))) {
@@ -84,4 +96,24 @@ public class FileManager {
     public void accountAdded (String resourceName) {
         writeHistoryToFile(String.format("%s account added",resourceName));
     }
+    public void updateLogin(String resourceName, String newLogin) {
+        List<Account> accounts = readAccount(); // Read existing accounts
+        for (Account account : accounts) {
+            if (account.getResource().equals(resourceName)) {
+                account.setLogin(newLogin); // Update login
+            }
+        }
+        writeAccountsToFile(accounts); // Rewrite the file with updated accounts
+    }
+
+    public void updatePassword(String resourceName, String newPassword) {
+        List<Account> accounts = readAccount(); // Read existing accounts
+        for (Account account : accounts) {
+            if (account.getResource().equals(resourceName)) {
+                account.setPassword(newPassword); // Update password
+            }
+        }
+        writeAccountsToFile(accounts); // Rewrite the file with updated accounts
+    }
+
 }
