@@ -16,6 +16,22 @@ public class Account {
 
     }
 
+    public void setResource(String resource) {
+        this.resource = resource;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
     public String getResource() {
         return resource;
     }

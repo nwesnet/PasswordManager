@@ -5,6 +5,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.animation.TranslateTransition;
@@ -115,6 +117,8 @@ public class MainPageController {
             tt1.play();
             tt1.setOnFinished(event -> {
                 accountsScrollPane.setVisible(false);
+                // Remove only dynamically added account details (leave the search bar)
+                accountsVBox.getChildren().removeIf(node -> !(node instanceof TextField));
             });
         }
     }
@@ -122,9 +126,17 @@ public class MainPageController {
         VBox vb = new VBox(5);
         vb.setPadding(new Insets(6));
 
+        // Add resource label and Edit button
         Label resourceLabel = new Label("Resource:    " + account.getResource());
-
-        Label loginLabel = new Label("Login:       ");
+        Button editResourceButton = new Button("Edit");
+        editResourceButton.setOnAction(e -> onEditResourcePressed(resourceLabel, account.getResource(), fileManager));
+        // Add delete button
+        Button deleteAccountButton = new Button("Delete");
+        deleteAccountButton.setOnAction(e -> onDeleteAccountPressed(account.getResource(), account.getLogin(), fileManager));
+        // Add resource HBox (Label and Edit button)
+        HBox resourceHBox = new HBox(5, resourceLabel, editResourceButton, deleteAccountButton);
+        //Add login label and text. Add also copy and chage buttons
+        Label loginLabel = new Label("Login:        ");
         TextField loginField = new TextField(account.getLogin());
         loginField.setPrefColumnCount(16);
         loginField.setEditable(false);
@@ -144,6 +156,7 @@ public class MainPageController {
         passwordField.setEditable(false);
 
         TextField passwordTextField = new TextField();
+        passwordTextField.setPrefColumnCount(16);
         passwordTextField.setVisible(false);
         passwordTextField.setManaged(false);
 
@@ -156,41 +169,121 @@ public class MainPageController {
         showPasswordButton.setOnAction(e -> onShowPasswordPressed(passwordField, passwordTextField, showPasswordButton));
         copyPasswordButton.setOnAction(e -> onCopyPasswordPressed(passwordField));
         changePasswordButton.setOnAction(e -> onChangePasswordPressed(passwordField, account.getResource(), fileManager));
-
         // Add all elements to the VBox
-        vb.getChildren().addAll(resourceLabel, loginHBox, passwordHBox);
-
+        vb.getChildren().addAll(resourceHBox, loginHBox, passwordHBox);
         // Add the VBox to the accounts VBox in the ScrollPane
         accountsVBox.getChildren().add(vb);
+    }
+    private void onEditResourcePressed(Label resourceLabel, String oldResource, FileManager fileManager){
+        // Make the resource label editable (use TextField instead of Label)
+        TextField resourceField = new TextField(oldResource);
+        // Replace the label with the TextField in the HBox
+        ((HBox) resourceLabel.getParent()).getChildren().set(0,resourceField);
+        resourceField.requestFocus();
+        // Save old value in case we need to compare
+        String oldResourceName = resourceLabel.getText().substring(13);
+        // Add event listener to detect when focus is lost (or enter is pressed)
+        resourceField.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
+            if (!isNowFocused) {
+                String newResourceName = resourceField.getText();
+                if (!newResourceName.equals(oldResourceName)) {
+                    // Update resource in FileManager
+                    fileManager.updateResource(oldResourceName,newResourceName);
+                    fileManager.theDataHasBeenChanged("Resource",newResourceName);
+                    // Replace the TextField back with the updated label
+                    resourceLabel.setText("Resource:    " + newResourceName);
+                    ((HBox) resourceField.getParent()).getChildren().set(0,resourceLabel);
+                }
+            }
+        });
+    }
+    private void onDeleteAccountPressed(String resourceName, String login, FileManager fileManager){
+        //Logic to delete the account
+        fileManager.deleteAccount(resourceName);
+        fileManager.theDataHasBeenChanged("Deleted",resourceName);
+        // Remove only dynamically added account details (leave the search bar)
+        accountsVBox.getChildren().removeIf(node -> !(node instanceof TextField));
+        List<Account> updateAccounts = fileManager.readAccount();
+        for (Account account : updateAccounts){
+            displayAccountDetails(account,fileManager);
+        }
     }
     private void onCopyLoginPressed(TextField loginField) {
         // Logic to copy the login to the clipboard
         System.out.println("Copied login: " + loginField.getText());
+        // Copy login text to clipboard
+        Clipboard clipboard = Clipboard.getSystemClipboard();
+        ClipboardContent content = new ClipboardContent();
+        content.putString(loginField.getText());
+        clipboard.setContent(content);
     }
     private void onChangeLoginPressed(TextField loginField, String resourceName, FileManager fileManager) {
         // Logic to change the login
         System.out.println("Change login for resource: " + resourceName);
+        // Make the login field editable
+        loginField.setEditable(true);
+        loginField.requestFocus();
+        // Save the old value in case we need to compare changes later
+        String oldLogin = loginField.getText();
+        // Add an event listener to detect when the field loses focus (indicating user is done editing)
+        loginField.focusedProperty().addListener((obs, oldValue, newValue) -> {
+            if (!newValue) { // When the focus is lost
+                String newLogin = loginField.getText();
+                if (!newLogin.equals(oldLogin)) {
+                    // Update the login in the file using FileManager
+                    fileManager.updateLogin(resourceName, newLogin);
+                    fileManager.theDataHasBeenChanged("Login",resourceName);
+                    loginField.setEditable(false); // Make the field uneditable again
+                }
+            }
+        });
     }
     private void onShowPasswordPressed(PasswordField passwordField, TextField passwordTextField, Button showPasswordButton) {
         // Logic to toggle password visibility
         if (passwordField.isVisible()) {
             passwordTextField.setText(passwordField.getText());
             passwordField.setVisible(false);
+            passwordField.setManaged(false);
             passwordTextField.setVisible(true);
-            showPasswordButton.setText("Hide Password");
+            passwordTextField.setManaged(true);
+            showPasswordButton.setText("Hide");
         } else {
             passwordField.setVisible(true);
+            passwordField.setManaged(true);
             passwordTextField.setVisible(false);
-            showPasswordButton.setText("Show Password");
+            passwordTextField.setManaged(false);
+            showPasswordButton.setText("Show");
         }
     }
     private void onCopyPasswordPressed(PasswordField passwordField) {
         // Logic to copy the password to the clipboard
         System.out.println("Copied password: " + passwordField.getText());
+        // Copy password text to clipboard
+        Clipboard clipboard = Clipboard.getSystemClipboard();
+        ClipboardContent content = new ClipboardContent();
+        content.putString(passwordField.getText());
+        clipboard.setContent(content);
     }
     private void onChangePasswordPressed(PasswordField passwordField, String resourceName, FileManager fileManager) {
         // Logic to change the password
         System.out.println("Change password for resource: " + resourceName);
+        // Make the password field editable
+        passwordField.setEditable(true);
+        passwordField.requestFocus();
+        // Save the old password in case we need to compare changes later
+        String oldPassword = passwordField.getText();
+        // Add an event listener to detect when the field loses focus (indicating user is done editing)
+        passwordField.focusedProperty().addListener((obs, oldValue, newValue) -> {
+            if (!newValue) { // When the focus is lost
+                String newPassword = passwordField.getText();
+                if (!newPassword.equals(oldPassword)) {
+                    // Update the password in the file using FileManager
+                    fileManager.updatePassword(resourceName, newPassword);
+                    fileManager.theDataHasBeenChanged("Password",resourceName);
+                    passwordField.setEditable(false); // Make the field uneditable again
+                }
+            }
+        });
     }
 
     @FXML
@@ -201,6 +294,7 @@ public class MainPageController {
         // Toggle visibility of logs pane
         logsVisible = !logsVisible;
         if(logsVisible){
+            FileManager fileManager = new FileManager();
             logsScrollPane.setVisible(true);
             TranslateTransition tt1 = new TranslateTransition(Duration.millis(300),logsScrollPane);
             tt1.setFromX(-logsScrollPane.getPrefWidth());
@@ -208,6 +302,7 @@ public class MainPageController {
             TranslateTransition tt2 = new TranslateTransition(Duration.millis(300),logsButton);
             tt2.setFromX(0);
             tt2.setToX(150);
+            logsTextArea.setText(fileManager.readHistory());
             tt1.play();
             tt2.play();
 

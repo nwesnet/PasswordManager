@@ -53,12 +53,12 @@
                     visible="false"
                     prefWidth="460" maxWidth="550" minWidth="350"
                     fitToWidth="true">
+
             <!-- This can be populated with account data dynamically -->
             <VBox fx:id="accountsVBox"
                   alignment="CENTER"
                   spacing="10"
                   fillWidth="true">
-
                 <!-- Search Bar for Accounts -->
                 <TextField fx:id="accountSearchBar" promptText="Search a resource"/>
                 <!-- Account data will be dynamically populated here -->
