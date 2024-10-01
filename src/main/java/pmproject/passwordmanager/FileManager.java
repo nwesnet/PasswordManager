@@ -63,7 +63,7 @@ public class FileManager {
             e.printStackTrace();
         }
     }
-    public StringBuilder readHistory () {
+    public String readHistory () {
         StringBuilder history = new StringBuilder();
         try (DataInputStream dis = new DataInputStream(new FileInputStream(FILE_PATH_HISTORY))) {
             while(dis.available()>0){
@@ -73,7 +73,7 @@ public class FileManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return history;
+        return history.toString();
     }
     public void writeHistoryToFile (String message) {
         String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
@@ -105,7 +105,6 @@ public class FileManager {
         }
         writeAccountsToFile(accounts); // Rewrite the file with updated accounts
     }
-
     public void updatePassword(String resourceName, String newPassword) {
         List<Account> accounts = readAccount(); // Read existing accounts
         for (Account account : accounts) {
@@ -114,6 +113,20 @@ public class FileManager {
             }
         }
         writeAccountsToFile(accounts); // Rewrite the file with updated accounts
+    }
+    public void updateResource(String oldResource, String newResource) {
+        List<Account> accounts = readAccount();
+        for (Account account : accounts) {
+            if (account.getResource().equals(oldResource)) {
+                account.setResource(newResource);
+            }
+        }
+        writeAccountsToFile(accounts);
+    }
+    public void deleteAccount(String resourceName){
+        List<Account> accounts = readAccount();
+        accounts.removeIf(account -> account.getResource().equals(resourceName));
+        writeAccountsToFile(accounts);
     }
 
 }
