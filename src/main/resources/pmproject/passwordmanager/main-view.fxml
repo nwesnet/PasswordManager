@@ -16,7 +16,9 @@
     <top>
         <MenuBar fx:id="menuBar">
             <Menu text="File">
-                <MenuItem text="exit"/>
+                <MenuItem fx:id="loginMenuItem" text="Login"/>
+                <MenuItem fx:id="accountMenuItem" text="Accounts"/>
+                <MenuItem fx:id="historyMenuItem" text="History"/>
             </Menu>
             <Menu text="Settings">
                 <MenuItem text="Preferences"/>
@@ -91,6 +93,10 @@
                      HBox.hgrow="ALWAYS"/>
             </HBox>
     </bottom>
+
+    <center>
+        <VBox fx:id="VBoxCenter" alignment="CENTER" spacing="10"/>
+    </center>
 
     <padding>
         <Insets top="0" left="0" right="0" bottom="0"/>
