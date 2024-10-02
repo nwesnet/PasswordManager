@@ -63,17 +63,17 @@ public class FileManager {
             e.printStackTrace();
         }
     }
-    public String readHistory () {
-        StringBuilder history = new StringBuilder();
+    public List<String> readHistory () {
+        List<String> history = new ArrayList<>();
         try (DataInputStream dis = new DataInputStream(new FileInputStream(FILE_PATH_HISTORY))) {
             while(dis.available()>0){
                 String logEntry = dis.readUTF();
-                history.append(logEntry);
+                history.add(logEntry);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return history.toString();
+        return history;
     }
     public void writeHistoryToFile (String message) {
         String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));

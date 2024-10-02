@@ -8,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.animation.TranslateTransition;
 import javafx.stage.Stage;
@@ -15,6 +16,7 @@ import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class MainPageController {
     @FXML
@@ -24,7 +26,11 @@ public class MainPageController {
     @FXML
     private HBox leftHBox;
     @FXML
+    private VBox logsVBox;
+    @FXML
     private VBox accountsVBox;
+    @FXML
+    private TextField logsSearchBar;
     @FXML
     private HBox bottomHBox;
     @FXML
@@ -36,6 +42,8 @@ public class MainPageController {
     @FXML
     private Button showAccountsButton;
     @FXML
+    private TextField accountSearchBar;
+    @FXML
     private TextArea logsTextArea;
 
     private boolean logsVisible = false;
@@ -44,6 +52,13 @@ public class MainPageController {
     @FXML
     protected void initialize () {
         leftHBox.setSpacing(-logsScrollPane.getPrefWidth());
+        // Add listener to accountSearchBar to handle search input
+        accountSearchBar.textProperty().addListener((observable, oldValue, newValue ) -> {
+            filterAccounts(newValue);
+        });
+        logsSearchBar.textProperty().addListener((observable, oldValue, newValue) -> {
+            filterLogs(newValue);
+        });
     }
 
     @FXML
@@ -290,11 +305,20 @@ public class MainPageController {
     protected void onLogsClicked() {
         // Logic for displaying logs
         System.out.println("Logs clicked");
-        System.out.println(logsVisible);
         // Toggle visibility of logs pane
         logsVisible = !logsVisible;
         if(logsVisible){
             FileManager fileManager = new FileManager();
+            List<String> logs = fileManager.readHistory();
+            logsTextArea.clear();
+            // Combine logs into one single string with newlines separating each log
+            StringBuilder logBuilder = new StringBuilder();
+            for (String log : logs){
+                logBuilder.append(log).append("\n");
+            }
+            // Set the logs in the TextArea
+            logsTextArea.setText(logBuilder.toString());
+
             logsScrollPane.setVisible(true);
             TranslateTransition tt1 = new TranslateTransition(Duration.millis(300),logsScrollPane);
             tt1.setFromX(-logsScrollPane.getPrefWidth());
@@ -302,7 +326,6 @@ public class MainPageController {
             TranslateTransition tt2 = new TranslateTransition(Duration.millis(300),logsButton);
             tt2.setFromX(0);
             tt2.setToX(150);
-            logsTextArea.setText(fileManager.readHistory());
             tt1.play();
             tt2.play();
 
@@ -319,6 +342,48 @@ public class MainPageController {
             tt1.setOnFinished(event -> {
                 logsScrollPane.setVisible(false);
             });
+        }
+    }
+    private void filterAccounts(String query){
+        FileManager fileManager = new FileManager();
+        List<Account> allAccounts = fileManager.readAccount();
+        // Filter accounts based on the search query using Stream API
+        List<Account> filteredAccounts = allAccounts.stream().filter(account -> account.getResource().toLowerCase()
+                .contains(query.toLowerCase())).collect(Collectors.toList());
+        // Clear the dynamic account details from the VBox (preserve the search bar)
+        accountsVBox.getChildren().removeIf(node -> !(node instanceof TextField));
+        // If no matches, display "No matches" message
+        if (filteredAccounts.isEmpty()){
+            Label noMatchesLabel = new Label("No matches");
+            accountsVBox.getChildren().add(noMatchesLabel);
+        }
+        else {
+            // Display the filtered accounts
+            for (Account account : filteredAccounts){
+                displayAccountDetails(account,fileManager);
+            }
+        }
+    }
+    private void filterLogs (String query) {
+        FileManager fileManager = new FileManager();
+        List<String> allLogs = fileManager.readHistory();
+        // Filter logs based on the search query using Stream API
+        List<String> fileteredLogs = allLogs.stream().filter(log -> log.toLowerCase()
+                .contains(query.toLowerCase())).collect(Collectors.toList());
+        // Clear the TextArea before adding filtered logs
+        logsTextArea.clear();
+        // If no matches, display "No matches" message
+        if (fileteredLogs.isEmpty()) {
+            logsTextArea.setText("No matches");
+        }
+        else {
+            // Display the filtered logs
+            // Display the filtered logs in the TextArea
+            StringBuilder logBuilder = new StringBuilder();
+            for (String log : fileteredLogs) {
+                logBuilder.append(log).append("\n");
+            }
+            logsTextArea.setText(logBuilder.toString());
         }
     }
 }

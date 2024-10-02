@@ -25,7 +25,7 @@
     </top>
 
     <left>
-        <HBox fx:id="leftHBox" alignment="TOP_LEFT" spacing="0">
+        <HBox fx:id="leftHBox" alignment="TOP_LEFT">
             <ScrollPane fx:id="logsScrollPane"
                         visible="false"
                         HBox.hgrow="NEVER"
@@ -35,10 +35,8 @@
                 <VBox fx:id="logsVBox" fillWidth="true" spacing="0">
                     <!-- Search Bar for Logs -->
                     <TextField fx:id="logsSearchBar" promptText="Search logs"/>
-                    <!-- Logs Display Area -->
-                    <TextArea fx:id="logsTextArea" wrapText="true" VBox.vgrow="ALWAYS">
-                        <Label text="Logs will be displayed here"/>
-                    </TextArea>
+                    <!-- Logs will be dynamically added here -->
+                    <TextArea fx:id="logsTextArea" wrapText="true" VBox.vgrow="ALWAYS" editable="false"/>
                 </VBox>
             </ScrollPane>
             <Button fx:id="logsButton" text="logs"
