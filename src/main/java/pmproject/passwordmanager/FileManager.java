@@ -27,6 +27,37 @@ public class FileManager {
             }
         }
     }
+    public Login readFromLoginFile() {
+        String username = null;
+        String password = null;
+        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH_LOGIN))){
+            String line;
+            while ((line = reader.readLine()) != null){
+                if (line.startsWith("Login: ")){
+                    username = line.substring(7);
+                }
+                else if (line.startsWith("Password: ")){
+                    password = line.substring(10);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (username != null && password != null) {
+            return new Login(username,password);
+        }
+        else {
+            return null;
+        }
+    }
+    public void writeToLoginFile (String username, String password) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH_LOGIN))){
+            writer.write("Login: " + username + "\n");
+            writer.write("Password: " + password + "\n");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     public List<Account> readAccount () {
         List<Account> accounts = new ArrayList<>();
         try(BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH_ACCOUNTS))){
