@@ -159,5 +159,4 @@ public class FileManager {
         accounts.removeIf(account -> account.getResource().equals(resourceName));
         writeAccountsToFile(accounts);
     }
-
 }

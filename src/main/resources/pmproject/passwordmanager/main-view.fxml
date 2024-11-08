@@ -7,25 +7,27 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
+<?import javafx.scene.shape.Rectangle?>
 <BorderPane fx:id="mainPane"
             xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             prefHeight="650" minHeight="450"
             prefWidth="750" minWidth="550"
             fx:controller="pmproject.passwordmanager.MainPageController">
+
     <top>
         <MenuBar fx:id="menuBar">
             <Menu text="File">
-                <MenuItem fx:id="loginMenuItem" text="Login"/>
+                <MenuItem fx:id="loginMenuItem" text="Login" onAction="#onFileMenuItemClicked"/>
                 <MenuItem fx:id="accountMenuItem" text="Accounts"/>
-                <MenuItem fx:id="historyMenuItem" text="History"/>
+                <MenuItem fx:id="historyMenuItem" text="History" onAction="#onHistoryMenuItemClicked"/>
             </Menu>
             <Menu text="Settings">
-                <MenuItem text="Preferences"/>
+                <MenuItem fx:id="preferencesMenuItem" text="Preferences"/>
             </Menu>
         </MenuBar>
     </top>
-
+    <!-- Left: History ScrollPane (Initially hidden) -->
     <left>
         <HBox fx:id="leftHBox" alignment="TOP_LEFT">
             <ScrollPane fx:id="logsScrollPane"
@@ -46,12 +48,12 @@
                     HBox.hgrow="NEVER"/>
         </HBox>
     </left>
-
     <!-- Right: Accounts ScrollPane (Initially hidden) -->
     <right>
         <ScrollPane fx:id="accountsScrollPane"
                     visible="false"
-                    prefWidth="460" maxWidth="550" minWidth="350"
+                    managed="true"
+                    prefWidth="450" maxWidth="450" minWidth="350"
                     fitToWidth="true">
 
             <!-- This can be populated with account data dynamically -->
@@ -67,7 +69,6 @@
     </right>
 
     <bottom>
-
         <HBox fx:id="bottomHBox"
               spacing="0"
               prefHeight="36"
@@ -94,9 +95,28 @@
             </HBox>
     </bottom>
 
-    <center>
-        <VBox fx:id="VBoxCenter" alignment="CENTER" spacing="10"/>
-    </center>
+        <StackPane fx:id="centerPane"
+                   visible="false"
+                   minHeight="220"
+                   prefHeight="220"
+                   maxHeight="220"
+                   minWidth="320"
+                   prefWidth="320"
+                   maxWidth="320"
+                   alignment="CENTER">
+            <VBox   spacing="10"
+                    fillWidth="true"
+                    style="-fx-border-color: lightgray; -fx-background-color: white;"
+                    StackPane.alignment="CENTER"
+                    alignment="CENTER">
+                <Label text="niec"/>
+                <TextField promptText="something" maxWidth="200"/>
+                <HBox spacing="10" alignment="CENTER">
+                    <Button text="Save"/>
+                    <Button text="Cancel"/>
+                </HBox>
+            </VBox>
+        </StackPane>
 
     <padding>
         <Insets top="0" left="0" right="0" bottom="0"/>

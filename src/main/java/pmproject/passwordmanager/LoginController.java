@@ -40,16 +40,20 @@ public class LoginController {
                 //Close the current login window and open the main window
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("main-view.fxml"));
                 Scene mainScene = new Scene(fxmlLoader.load(), 650, 550);
-                //Get the current stage (login window) and close it
-                Stage loginStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                loginStage.close();
+                // Get the controller of MainPageController to set mainStage
+                MainPageController mainPageController = fxmlLoader.getController();
                 //Open the main window in a new stage
                 Stage mainStage = new Stage();
                 mainStage.setTitle("Password manager");
                 mainStage.setScene(mainScene);
                 mainStage.setMinHeight(550);
                 mainStage.setMinWidth(650);
+                // Pass the main stage to MainPageController
+                mainPageController.setMainStage(mainStage);
                 mainStage.show();
+                //Get the current stage (login window) and close it
+                Stage loginStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                loginStage.close();
 
             } catch (IOException e) {
                 e.printStackTrace();
