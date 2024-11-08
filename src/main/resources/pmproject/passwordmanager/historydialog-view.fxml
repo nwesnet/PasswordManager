@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<VBox xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="pmproject.passwordmanager.FileDialogController"
+            prefHeight="400.0" prefWidth="600.0">
+            <TextField fx:id="currentPathFile" editable="false"/>
+
+            <TextField fx:id="newPathFile" promptText="new file path"/>
+
+            <HBox   spacing="10"
+                    alignment="CENTER">
+                <Button fx:id="saveButton" text="save" onAction="#onSaveButtonClicked"/>
+                <Button fx:id="cancelButton" text="cancel" onAction="#onCancelButtonClicked"/>
+            </HBox>
+
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+</VBox>

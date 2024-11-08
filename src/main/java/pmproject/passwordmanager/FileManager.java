@@ -27,6 +27,37 @@ public class FileManager {
             }
         }
     }
+    public Login readFromLoginFile() {
+        String username = null;
+        String password = null;
+        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH_LOGIN))){
+            String line;
+            while ((line = reader.readLine()) != null){
+                if (line.startsWith("Login: ")){
+                    username = line.substring(7);
+                }
+                else if (line.startsWith("Password: ")){
+                    password = line.substring(10);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (username != null && password != null) {
+            return new Login(username,password);
+        }
+        else {
+            return null;
+        }
+    }
+    public void writeToLoginFile (String username, String password) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH_LOGIN))){
+            writer.write("Login: " + username + "\n");
+            writer.write("Password: " + password + "\n");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     public List<Account> readAccount () {
         List<Account> accounts = new ArrayList<>();
         try(BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH_ACCOUNTS))){
@@ -51,12 +82,24 @@ public class FileManager {
             e.printStackTrace();
         }
     }
-    public StringBuilder readHistory () {
-        StringBuilder history = new StringBuilder();
+    private void writeAccountsToFile(List<Account> accounts) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH_ACCOUNTS, false))) {
+            for (Account account : accounts) {
+                writer.write("Resource: " + account.getResource() + "\n");
+                writer.write("Login: " + account.getLogin() + "\n");
+                writer.write("Password: " + account.getPassword() + "\n");
+                writer.write("Time: " + account.getDate().toString() + "\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public List<String> readHistory () {
+        List<String> history = new ArrayList<>();
         try (DataInputStream dis = new DataInputStream(new FileInputStream(FILE_PATH_HISTORY))) {
             while(dis.available()>0){
                 String logEntry = dis.readUTF();
-                history.append(logEntry);
+                history.add(logEntry);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -83,5 +126,37 @@ public class FileManager {
     }
     public void accountAdded (String resourceName) {
         writeHistoryToFile(String.format("%s account added",resourceName));
+    }
+    public void updateLogin(String resourceName, String newLogin) {
+        List<Account> accounts = readAccount(); // Read existing accounts
+        for (Account account : accounts) {
+            if (account.getResource().equals(resourceName)) {
+                account.setLogin(newLogin); // Update login
+            }
+        }
+        writeAccountsToFile(accounts); // Rewrite the file with updated accounts
+    }
+    public void updatePassword(String resourceName, String newPassword) {
+        List<Account> accounts = readAccount(); // Read existing accounts
+        for (Account account : accounts) {
+            if (account.getResource().equals(resourceName)) {
+                account.setPassword(newPassword); // Update password
+            }
+        }
+        writeAccountsToFile(accounts); // Rewrite the file with updated accounts
+    }
+    public void updateResource(String oldResource, String newResource) {
+        List<Account> accounts = readAccount();
+        for (Account account : accounts) {
+            if (account.getResource().equals(oldResource)) {
+                account.setResource(newResource);
+            }
+        }
+        writeAccountsToFile(accounts);
+    }
+    public void deleteAccount(String resourceName){
+        List<Account> accounts = readAccount();
+        accounts.removeIf(account -> account.getResource().equals(resourceName));
+        writeAccountsToFile(accounts);
     }
 }

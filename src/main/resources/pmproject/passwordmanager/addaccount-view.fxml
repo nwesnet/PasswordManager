@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      alignment="CENTER"
+      fx:controller="pmproject.passwordmanager.AddAccountController"
+      spacing="10"
+      prefHeight="220.0" prefWidth="400.0">
+
+    <!-- Resource Field -->
+    <TextField fx:id="resourceField"
+               promptText="Resource"
+               HBox.hgrow="ALWAYS"
+               prefWidth="Infinity"/>
+
+    <!-- Login Field -->
+    <TextField fx:id="loginField"
+               promptText="Login"
+               HBox.hgrow="ALWAYS"
+               prefWidth="Infinity"/>
+
+    <!-- HBox for Password Field and Button -->
+    <HBox spacing="1" prefWidth="Infinity">
+        <StackPane HBox.hgrow="ALWAYS">
+            <!-- PasswordField and TextField stacked on top of each other -->
+            <PasswordField fx:id="passwordField"
+                           promptText="Password"/>
+            <TextField fx:id="passwordVisibleField"
+                       promptText="Password"
+                       visible="false"/>
+        </StackPane>
+        <Button fx:id="showPasswordButton"
+                text="S"
+                prefWidth="20"
+                onAction="#onShowPasswordClicked"/>
+    </HBox>
+
+    <!-- Save and Cancel Buttons -->
+    <Button fx:id="saveAccountButton"
+            text="Add"
+            prefWidth="60"
+            onAction="#onSaveAccountClicked"/>
+
+    <Button fx:id="cancelButton"
+            text="Cancel"
+            prefWidth="60"
+            onAction="#onCancelClicked"/>
+
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+</VBox>

@@ -7,25 +7,29 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
+<?import javafx.scene.shape.Rectangle?>
 <BorderPane fx:id="mainPane"
             xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             prefHeight="650" minHeight="450"
             prefWidth="750" minWidth="550"
             fx:controller="pmproject.passwordmanager.MainPageController">
+
     <top>
         <MenuBar fx:id="menuBar">
             <Menu text="File">
-                <MenuItem text="exit"/>
+                <MenuItem fx:id="loginMenuItem" text="Login" onAction="#onFileMenuItemClicked"/>
+                <MenuItem fx:id="accountMenuItem" text="Accounts"/>
+                <MenuItem fx:id="historyMenuItem" text="History" onAction="#onHistoryMenuItemClicked"/>
             </Menu>
             <Menu text="Settings">
-                <MenuItem text="Preferences"/>
+                <MenuItem fx:id="preferencesMenuItem" text="Preferences"/>
             </Menu>
         </MenuBar>
     </top>
-
+    <!-- Left: History ScrollPane (Initially hidden) -->
     <left>
-        <HBox fx:id="leftHBox" alignment="TOP_LEFT" spacing="0">
+        <HBox fx:id="leftHBox" alignment="TOP_LEFT">
             <ScrollPane fx:id="logsScrollPane"
                         visible="false"
                         HBox.hgrow="NEVER"
@@ -35,10 +39,8 @@
                 <VBox fx:id="logsVBox" fillWidth="true" spacing="0">
                     <!-- Search Bar for Logs -->
                     <TextField fx:id="logsSearchBar" promptText="Search logs"/>
-                    <!-- Logs Display Area -->
-                    <TextArea fx:id="logsTextArea" wrapText="true" VBox.vgrow="ALWAYS">
-                        <Label text="Logs will be displayed here"/>
-                    </TextArea>
+                    <!-- Logs will be dynamically added here -->
+                    <TextArea fx:id="logsTextArea" wrapText="true" VBox.vgrow="ALWAYS" editable="false"/>
                 </VBox>
             </ScrollPane>
             <Button fx:id="logsButton" text="logs"
@@ -46,29 +48,27 @@
                     HBox.hgrow="NEVER"/>
         </HBox>
     </left>
-
     <!-- Right: Accounts ScrollPane (Initially hidden) -->
     <right>
         <ScrollPane fx:id="accountsScrollPane"
                     visible="false"
-                    prefWidth="350" maxWidth="350" minWidth="350"
+                    managed="true"
+                    prefWidth="450" maxWidth="450" minWidth="350"
                     fitToWidth="true">
+
             <!-- This can be populated with account data dynamically -->
             <VBox fx:id="accountsVBox"
                   alignment="CENTER"
                   spacing="10"
                   fillWidth="true">
-
                 <!-- Search Bar for Accounts -->
                 <TextField fx:id="accountSearchBar" promptText="Search a resource"/>
-                <!-- Placeholder for account data -->
-                <Label text="Accounts will be displayed here"/>
+                <!-- Account data will be dynamically populated here -->
             </VBox>
         </ScrollPane>
     </right>
 
     <bottom>
-
         <HBox fx:id="bottomHBox"
               spacing="0"
               prefHeight="36"
@@ -94,6 +94,29 @@
                      HBox.hgrow="ALWAYS"/>
             </HBox>
     </bottom>
+
+        <StackPane fx:id="centerPane"
+                   visible="false"
+                   minHeight="220"
+                   prefHeight="220"
+                   maxHeight="220"
+                   minWidth="320"
+                   prefWidth="320"
+                   maxWidth="320"
+                   alignment="CENTER">
+            <VBox   spacing="10"
+                    fillWidth="true"
+                    style="-fx-border-color: lightgray; -fx-background-color: white;"
+                    StackPane.alignment="CENTER"
+                    alignment="CENTER">
+                <Label text="niec"/>
+                <TextField promptText="something" maxWidth="200"/>
+                <HBox spacing="10" alignment="CENTER">
+                    <Button text="Save"/>
+                    <Button text="Cancel"/>
+                </HBox>
+            </VBox>
+        </StackPane>
 
     <padding>
         <Insets top="0" left="0" right="0" bottom="0"/>
